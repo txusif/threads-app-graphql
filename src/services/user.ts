@@ -24,7 +24,7 @@ class UserService {
     }
 
     public static createUser(payload: CreateUserPayload) {
-        const { firstName, lastName, email, password } = payload;
+        const { firstName, lastName = "", email, password } = payload;
 
         const salt = randomBytes(32).toString("hex");
         const hashedPassword = UserService.generateHash(salt, password);
@@ -43,6 +43,12 @@ class UserService {
     private static async getUserByEmail(email: string) {
         return prismaClient.user.findUnique({
             where: { email },
+        });
+    }
+
+    public static async getUserById(id: string) {
+        return prismaClient.user.findUnique({
+            where: { id },
         });
     }
 
@@ -70,6 +76,10 @@ class UserService {
         );
 
         return token;
+    }
+
+    public static async decodeJWTToken(token: string) {
+        return JWT.verify(token, process.env.JWT_SECRET!);
     }
 }
 

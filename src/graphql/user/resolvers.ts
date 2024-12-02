@@ -8,6 +8,15 @@ const queries = {
         const token = await UserService.getUserToken(payload);
         return token;
     },
+
+    getCurrentLoggedInUser: async (_: any, parameters: any, context: any) => {
+        if (context && context.user) {
+            const id = context.user.id;
+            const user = await UserService.getUserById(id);
+            return user;
+        }
+        throw new Error("Not implemented yet");
+    },
 };
 
 const mutations = {
